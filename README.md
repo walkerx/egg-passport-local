@@ -34,29 +34,35 @@ $ npm i egg-passport-local --save
 
 ```js
 // {app_root}/config/plugin.js
-exports.passport-local = {
-  enable: true,
-  package: 'egg-passport-local',
+exports.passport = {
+    enable: true,
+    package: 'egg-passport',
+};
+
+exports.passportLocal = {
+    enable: true,
+    package:'egg-passport-local',
+};
+
+// {app_root}/app.js
+module.exports = app => {
+    app.passport.verify(function* (ctx, user) {
+        var user = yield ctx.service.user.findOne({name:user.username, pass:user.password});
+        return user;
+    });
+};
+
+// {app_root}/router.js
+module.exports = app => {
+    const options = {
+        successRedirect:'/auth/admin',
+        failureRedirect: '/login'
+    };
+    const local = app.passport.authenticate('local', options);
+    app.post('/login', local);
 };
 ```
 
-## Configuration
-
-```js
-// {app_root}/config/config.default.js
-exports.passport-local = {
-};
-```
-
-see [config/config.default.js](config/config.default.js) for more detail.
-
-## Example
-
-<!-- example here -->
-
-## Questions & Suggestions
-
-Please open an issue [here](https://github.com/eggjs/egg/issues).
 
 ## License
 
