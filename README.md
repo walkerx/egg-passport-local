@@ -47,7 +47,8 @@ exports.passportLocal = {
 // {app_root}/app.js
 module.exports = app => {
     app.passport.verify(function* (ctx, user) {
-        var user = yield ctx.service.user.findOne({name:user.username, pass:user.password});
+        // 假设login请求是由form发送，带有参数username, password
+        var user = yield ctx.service.user.findOne({name:user.username, pass:user.password});
         return user;
     });
 };
